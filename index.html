@@ -212,20 +212,25 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
         });
       },
       onEachFeature: function(feature, layer) {
-        const p = feature.properties;
-        layer.bindPopup(`
-          <b>Tornado Touchdown Point</b><br>
-          Date: ${p.mo}/${p.dy}/${p.yr}<br>
-          Rating: F/EF ${p.mag}<br>
-          Injuries: ${p.inj}<br>
-          Deaths: ${p.fat}<br>
-          <i>No ending coordinate recorded.</i>
-        `);
-      }
-    }).addTo(map);
+  const p = feature.properties;
 
-    layerControl.addOverlay(tornadoPoints, "Touchdown Points");
+  layer.bindPopup(`
+    <b>Tornado Record (Incomplete)</b><br><br>
+
+    <b>Date:</b> ${p.mo}/${p.dy}/${p.yr}<br>
+    <b>Rating:</b> EF-${p.mag}<br><br>
+
+    <b>Injuries:</b> ${p.inj}<br>
+    <b>Fatalities:</b> ${p.fat}<br><br>
+
+    <i>No path data available</i>
+  `);
+
+  // OPTIONAL: add hover tooltip
+  layer.on("mouseover", function() {
+    layer.bindTooltip(`EF-${p.mag} | ${p.yr}`, { sticky: true }).openTooltip();
   });
+}
 
   let countyLayer;
 
