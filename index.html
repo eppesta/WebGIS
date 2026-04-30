@@ -129,8 +129,8 @@ const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/service
 
  tornadoData;
  tornadoPaths;
-let tornadoPoints;
-let tornadoPointsData;
+let ;
+let Data;
 
 const layerControl = L.control.layers(
   { "Esri Topographic": basemap },
@@ -215,7 +215,8 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes.geojson")
 fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
   .then(response => response.json())
   .then(data => {
-    tornadoPoints = L.geoJSON(data, {
+    tornadoPointsData = data;
+drawTornadoPoints();
       pointToLayer: function(feature, latlng) {
         return L.circleMarker(latlng, {
           radius: 4,
