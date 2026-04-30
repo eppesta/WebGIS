@@ -287,39 +287,7 @@ document.getElementById("ratingFilter").addEventListener("change", drawTornadoes
 
 document.getElementById("decadeFilter").addEventListener("change", drawTornadoes);
 
-  const cities = [
-  { name: "Omaha", coords: [41.2565, -95.9345] },
-  { name: "Lincoln", coords: [40.8136, -96.7026] },
-  { name: "Grand Island", coords: [40.9264, -98.3420] },
-  { name: "Kearney", coords: [40.6993, -99.0817] },
-  { name: "North Platte", coords: [41.1403, -100.7601] },
-  { name: "Norfolk", coords: [42.0327, -97.4138] },
-  { name: "Scottsbluff", coords: [41.8666, -103.6672] }
-];
-
-const cityLayer = L.layerGroup();
-
-cities.forEach(city => {
-  L.circleMarker(city.coords, {
-    radius: 5,
-    color: "black",
-    fillColor: "white",
-    fillOpacity: 1,
-    weight: 2
-  })
-  .bindPopup(`<b>${city.name}</b>`)
-  .addTo(cityLayer);
-});
-
-cityLayer.addTo(map);
-layerControl.addOverlay(cityLayer, "Major Cities");
-
-document.getElementById("searchButton").addEventListener("click", function() {
-  const searchValue = document.getElementById("citySearch").value.trim().toLowerCase();
-
-  const result = cities.find(city =>
-    city.name.toLowerCase().includes(searchValue)
-  );
+<button id="searchButton" type="button">Search</button>
 
   if (result && searchValue !== "") {
     map.setView(result.coords, 10);
