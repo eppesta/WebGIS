@@ -251,6 +251,8 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
     layerControl.addOverlay(countyLayer, "Nebraska Counties");
   });
 
+  countyLayer.bringToBack();
+
 document.getElementById("ratingFilter").addEventListener("change", drawTornadoes);
 
 document.getElementById("yearSlider").addEventListener("input", function() {
