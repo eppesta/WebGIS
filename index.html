@@ -264,10 +264,11 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
       }
     }).addTo(map);
 
+    countyLayer.bringToBack();
+
     layerControl.addOverlay(countyLayer, "Nebraska Counties");
   });
 
-  countyLayer.bringToBack();
 
 document.getElementById("ratingFilter").addEventListener("change", drawTornadoes);
 
