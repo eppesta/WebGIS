@@ -305,9 +305,15 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
   });
 
 
-document.getElementById("ratingFilter").addEventListener("change", drawTornadoes);
+document.getElementById("ratingFilter").addEventListener("change", function() {
+  drawTornadoes();
+  drawTornadoPoints();
+});
 
-document.getElementById("decadeFilter").addEventListener("change", drawTornadoes);
+document.getElementById("decadeFilter").addEventListener("change", function() {
+  drawTornadoes();
+  drawTornadoPoints();
+});
 
 <button id="searchButton" type="button">Search</button>
 
