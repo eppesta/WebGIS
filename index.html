@@ -19,38 +19,37 @@
       width: 100%;
     }
 
-    .title-box {
+    .ui-panel {
   position: absolute;
   top: 10px;
   left: 50px;
-  width: 280px;
   z-index: 1000;
-  background: white;
-  padding: 10px 14px;
-  border-radius: 6px;
-  box-shadow: 0 0 8px #777;
+  width: 300px;
 }
 
-    .title-box h2 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .title-box p {
-      margin: 4px 0 0 0;
-      font-size: 13px;
-    }
-
-   .control-box {
-  position: absolute;
-  top: 140px;   /* push it down */
-  left: 50px;
-  z-index: 1000;
+.title-box,
+.info-box,
+.control-box {
+  position: relative;
+  margin-bottom: 10px;
   background: white;
   padding: 12px;
   border-radius: 6px;
   box-shadow: 0 0 8px #777;
-  width: 220px;
+}
+
+.title-box h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.title-box p {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+}
+
+.info-box {
+  font-size: 12px;
 }
 
 .control-box h3 {
@@ -58,34 +57,14 @@
 }
 
 .control-box select,
-.control-box input {
+.control-box input,
+.control-box button {
   width: 100%;
 }
 
-.legend {
-  background: white;
-  padding: 14px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #555;
-  line-height: 22px;
-  font-size: 14px;
-}
-    .control-box button {
-  width: 100%;
+.control-box button {
   margin-top: 6px;
   padding: 5px;
-}
-    .info-box {
-  position: absolute;
-  top: 160px;
-  left: 50px;
-  z-index: 1000;
-  background: white;
-  padding: 10px;
-  border-radius: 6px;
-  box-shadow: 0 0 8px #777;
-  width: 280px;
-  font-size: 12px;
 }
     .ui-panel {
   position: absolute;
