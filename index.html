@@ -201,6 +201,7 @@ function drawTornadoes() {
 }
 
 function drawTornadoPoints() {
+  if (!tornadoPointsData) return;
   if (tornadoPoints) {
   map.removeLayer(tornadoPoints);
   layerControl.removeLayer(tornadoPoints);
