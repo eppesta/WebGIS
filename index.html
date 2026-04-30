@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Nebraska Tornado Paths Web GIS</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+
+    .title-box {
+      position: absolute;
+      top: 10px;
+      left: 50px;
+      z-index: 1000;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      box-shadow: 0 0 8px #777;
+    }
+
+    .title-box h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .title-box p {
+      margin: 4px 0 0 0;
+      font-size: 13px;
+    }
+
+    .control-box {
+  position: absolute;
+  top: 90px;
+  right: 10px;
+  z-index: 1000;
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #777;
+  width: 220px;
+}
+
+.control-box h3 {
+  margin-top: 0;
+}
+
+.control-box select,
+.control-box input {
+  width: 100%;
+}
+
+.legend {
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #777;
+  line-height: 20px;
+}
+  </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div class="title-box">
+  <h2>Nebraska Tornado Paths</h2>
+  <p>Historic tornado paths and touchdown points</p>
+</div>
+
+<div class="control-box">
+  <h3>Filters</h3>
+
+  <label>Minimum F/EF Rating</label>
+  <select id="ratingFilter">
+    <option value="-1">All</option>
+    <option value="0">F/EF0+</option>
+    <option value="1">F/EF1+</option>
+    <option value="2">F/EF2+</option>
+    <option value="3">F/EF3+</option>
+    <option value="4">F/EF4+</option>
+    <option value="5">F/EF5</option>
+  </select>
+
+  <br><br>
+
+  <label>Year</label>
+  <input id="yearSlider" type="range" min="1950" max="2024" value="2024">
+  <p id="yearValue">Through 2024</p>
+</div>
+
+<script>
+const map = L.map('map').setView([41.5, -99.7], 7);
+
+const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri'
+}).addTo(map);
+
+let tornadoData;
+let tornadoPaths;
+let tornadoPoints;
+
+const layerControl = L.control.layers(
+  { "Esri Topographic": basemap },
+  {}
+).addTo(map);
+
+function getColor(mag) {
+  if (mag >= 5) return "#4b0082";
+  if (mag >= 4) return "#800026";
+  if (mag >= 3) return "#e31a1c";
+  if (mag >= 2) return "#fd8d3c";
+  if (mag >= 1) return "#feb24c";
+  return "#ffffb2";
+}
+
+function tornadoStyle(feature) {
+  const mag = Number(feature.properties.mag);
+  return {
+    color: getColor(mag),
+    weight: mag >= 3 ? 4 : 2,
+    opacity: 0.85
+  };
+}
+
+function tornadoPopup(feature, layer) {
+  const p = feature.properties;
+  layer.bindPopup(`
+    <b>Tornado Path</b><br>
+    Date: ${p.mo}/${p.dy}/${p.yr}<br>
+    Rating: F/EF ${p.mag}<br>
+    Length: ${p.len} miles<br>
+    Width: ${p.wid} yards<br>
+    Injuries: ${p.inj}<br>
+    Deaths: ${p.fat}
+  `);
+}
+
+function drawTornadoes() {
+  if (!tornadoData) return;
+
+  if (tornadoPaths) {
+    map.removeLayer(tornadoPaths);
+  }
+
+  const minRating = Number(document.getElementById("ratingFilter").value);
+  const maxYear = Number(document.getElementById("yearSlider").value);
+
+  const filtered = {
+    type: "FeatureCollection",
+    features: tornadoData.features.filter(f => {
+      const mag = Number(f.properties.mag);
+      const yr = Number(f.properties.yr);
+      return mag >= minRating && yr <= maxYear;
+    })
+  };
+
+  tornadoPaths = L.geoJSON(filtered, {
+    style: tornadoStyle,
+    onEachFeature: tornadoPopup
+  }).addTo(map);
+}
+
+fetch("nebraska-tornado-webgis/data/ne_tornadoes.geojson")
+  .then(response => response.json())
+  .then(data => {
+    tornadoData = data;
+    drawTornadoes();
+    layerControl.addOverlay(tornadoPaths, "Tornado Paths");
+  });
+
+fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
+  .then(response => response.json())
+  .then(data => {
+    tornadoPoints = L.geoJSON(data, {
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 4,
+          color: "black",
+          fillColor: "yellow",
+          fillOpacity: 0.8,
+          weight: 1
+        });
+      },
+      onEachFeature: function(feature, layer) {
+        const p = feature.properties;
+        layer.bindPopup(`
+          <b>Tornado Touchdown Point</b><br>
+          Date: ${p.mo}/${p.dy}/${p.yr}<br>
+          Rating: F/EF ${p.mag}<br>
+          Injuries: ${p.inj}<br>
+          Deaths: ${p.fat}<br>
+          <i>No ending coordinate recorded.</i>
+        `);
+      }
+    }).addTo(map);
+
+    layerControl.addOverlay(tornadoPoints, "Touchdown Points");
+  });
+
+document.getElementById("ratingFilter").addEventListener("change", drawTornadoes);
+
+document.getElementById("yearSlider").addEventListener("input", function() {
+  document.getElementById("yearValue").innerHTML = "Through " + this.value;
+  drawTornadoes();
+});
+
+const legend = L.control({ position: "bottomright" });
+
+legend.onAdd = function() {
+  const div = L.DomUtil.create("div", "legend");
+  div.innerHTML = `
+    <b>F/EF Rating</b><br>
+    <span style="color:#ffffb2;">■</span> F/EF0<br>
+    <span style="color:#feb24c;">■</span> F/EF1<br>
+    <span style="color:#fd8d3c;">■</span> F/EF2<br>
+    <span style="color:#e31a1c;">■</span> F/EF3<br>
+    <span style="color:#800026;">■</span> F/EF4<br>
+    <span style="color:#4b0082;">■</span> F/EF5
+  `;
+  return div;
+};
+
+legend.addTo(map);
+</script>
+
+</body>
+</html>
