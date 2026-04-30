@@ -77,7 +77,7 @@
 <div class="ui-panel">
   <div class="title-box">
     <h2>Nebraska Tornado Paths (1950–2024)</h2>
-    <p>Spatial patterns of tornado intensity, movement, and incomplete records</p>
+    <p>Spatial patterns of tornado intensity, movement, and incompe records</p>
   </div>
 
   <div class="info-box">
@@ -127,9 +127,10 @@ const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/service
   attribution: 'Tiles &copy; Esri'
 }).addTo(map);
 
-let tornadoData;
-let tornadoPaths;
+ tornadoData;
+ tornadoPaths;
 let tornadoPoints;
+let tornadoPointsData;
 
 const layerControl = L.control.layers(
   { "Esri Topographic": basemap },
