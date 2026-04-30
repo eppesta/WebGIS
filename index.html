@@ -140,8 +140,8 @@ function tornadoStyle(feature) {
   const mag = Number(feature.properties.mag);
   return {
     color: getColor(mag),
-    weight: mag >= 3 ? 4 : 2,
-    opacity: 0.85
+    weight: mag >= 4 ? 5 : mag >= 3 ? 4 : 2,
+    opacity: 0.7
   };
 }
 
@@ -225,6 +225,47 @@ document.getElementById("ratingFilter").addEventListener("change", drawTornadoes
 document.getElementById("yearSlider").addEventListener("input", function() {
   document.getElementById("yearValue").innerHTML = "Through " + this.value;
   drawTornadoes();
+});
+
+  const cities = [
+  { name: "Omaha", coords: [41.2565, -95.9345] },
+  { name: "Lincoln", coords: [40.8136, -96.7026] },
+  { name: "Grand Island", coords: [40.9264, -98.3420] },
+  { name: "Kearney", coords: [40.6993, -99.0817] },
+  { name: "North Platte", coords: [41.1403, -100.7601] },
+  { name: "Norfolk", coords: [42.0327, -97.4138] },
+  { name: "Scottsbluff", coords: [41.8666, -103.6672] }
+];
+
+const cityLayer = L.layerGroup();
+
+cities.forEach(city => {
+  L.circleMarker(city.coords, {
+    radius: 5,
+    color: "black",
+    fillColor: "white",
+    fillOpacity: 1,
+    weight: 2
+  })
+  .bindPopup(`<b>${city.name}</b>`)
+  .addTo(cityLayer);
+});
+
+cityLayer.addTo(map);
+layerControl.addOverlay(cityLayer, "Major Cities");
+
+document.getElementById("searchButton").addEventListener("click", function() {
+  const searchValue = document.getElementById("citySearch").value.toLowerCase();
+
+  const result = cities.find(city =>
+    city.name.toLowerCase() === searchValue
+  );
+
+  if (result) {
+    map.setView(result.coords, 10);
+  } else {
+    alert("City not found. Try Omaha, Lincoln, Kearney, Grand Island, Norfolk, North Platte, or Scottsbluff.");
+  }
 });
 
 const legend = L.control({ position: "bottomright" });
