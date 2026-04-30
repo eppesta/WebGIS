@@ -114,32 +114,30 @@
   </div>
 
   <div class="control-box">
-    <!-- your filters stay the same -->
+    <h3>Filters</h3>
+
+    <label>Minimum F/EF Rating</label>
+    <select id="ratingFilter">
+      <option value="-1">All</option>
+      <option value="0">F/EF0+</option>
+      <option value="1">F/EF1+</option>
+      <option value="2">F/EF2+</option>
+      <option value="3">F/EF3+</option>
+      <option value="4">F/EF4+</option>
+      <option value="5">F/EF5</option>
+    </select>
+
+    <br><br>
+
+    <label>Year</label>
+    <input id="yearSlider" type="range" min="1950" max="2024" value="2024">
+    <p id="yearValue">Through 2024</p>
+
+    <label>Search City</label>
+    <input id="citySearch" type="text" placeholder="Example: Lincoln">
+    <button id="searchButton">Search</button>
   </div>
 </div>
-
-  <label>Minimum F/EF Rating</label>
-  <select id="ratingFilter">
-    <option value="-1">All</option>
-    <option value="0">F/EF0+</option>
-    <option value="1">F/EF1+</option>
-    <option value="2">F/EF2+</option>
-    <option value="3">F/EF3+</option>
-    <option value="4">F/EF4+</option>
-    <option value="5">F/EF5</option>
-  </select>
-
-  <br><br>
-
-  <label>Year</label>
-  <input id="yearSlider" type="range" min="1950" max="2024" value="2024">
-  <p id="yearValue">Through 2024</p>
-  <label>Search City</label>
-<input id="citySearch" type="text" placeholder="Example: Lincoln">
-<button id="searchButton">Search</button>
- 
-</div>
-
 <script>
 const map = L.map('map').setView([41.5, -99.7], 7);
 
