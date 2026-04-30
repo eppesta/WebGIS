@@ -20,15 +20,16 @@
     }
 
     .title-box {
-      position: absolute;
-      top: 10px;
-      left: 50px;
-      z-index: 1000;
-      background: white;
-      padding: 10px 14px;
-      border-radius: 6px;
-      box-shadow: 0 0 8px #777;
-    }
+  position: absolute;
+  top: 10px;
+  left: 50px;
+  width: 280px;
+  z-index: 1000;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #777;
+}
 
     .title-box h2 {
       margin: 0;
@@ -77,8 +78,8 @@
 <div id="map"></div>
 
 <div class="title-box">
-  <h2>Nebraska Tornado Paths</h2>
-  <p>Historic tornado paths and touchdown points</p>
+  <h2>Nebraska Tornado Paths (1950–2024)</h2>
+  <p>Spatial patterns of tornado intensity, movement, and incomplete records</p>
 </div>
 
 <div class="control-box">
@@ -100,6 +101,14 @@
   <label>Year</label>
   <input id="yearSlider" type="range" min="1950" max="2024" value="2024">
   <p id="yearValue">Through 2024</p>
+  <label>Search City</label>
+<input id="citySearch" type="text" placeholder="Example: Lincoln">
+<button id="searchButton">Search</button>
+  .control-box button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 5px;
+}
 </div>
 
 <script>
