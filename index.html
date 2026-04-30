@@ -147,14 +147,21 @@ function tornadoStyle(feature) {
 
 function tornadoPopup(feature, layer) {
   const p = feature.properties;
+
   layer.bindPopup(`
-    <b>Tornado Path</b><br>
-    Date: ${p.mo}/${p.dy}/${p.yr}<br>
-    Rating: F/EF ${p.mag}<br>
-    Length: ${p.len} miles<br>
-    Width: ${p.wid} yards<br>
-    Injuries: ${p.inj}<br>
-    Deaths: ${p.fat}
+    <b>Tornado Event</b><br><br>
+
+    <b>Date:</b> ${p.mo}/${p.dy}/${p.yr}<br>
+    <b>Rating:</b> EF-${p.mag}<br><br>
+
+    <b>Path Length:</b> ${p.len} miles<br>
+    <b>Path Width:</b> ${p.wid} yards<br><br>
+
+    <b>Injuries:</b> ${p.inj}<br>
+    <b>Fatalities:</b> ${p.fat}<br><br>
+
+    <b>Start:</b> (${p.slat}, ${p.slon})<br>
+    <b>End:</b> (${p.elat}, ${p.elon})
   `);
 }
 
