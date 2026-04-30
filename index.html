@@ -315,14 +315,18 @@ cityLayer.addTo(map);
 layerControl.addOverlay(cityLayer, "Major Cities");
 
 document.getElementById("searchButton").addEventListener("click", function() {
-  const searchValue = document.getElementById("citySearch").value.toLowerCase();
+  const searchValue = document.getElementById("citySearch").value.trim().toLowerCase();
 
   const result = cities.find(city =>
-    city.name.toLowerCase() === searchValue
+    city.name.toLowerCase().includes(searchValue)
   );
 
-  if (result) {
+  if (result && searchValue !== "") {
     map.setView(result.coords, 10);
+    L.popup()
+      .setLatLng(result.coords)
+      .setContent(`<b>${result.name}</b>`)
+      .openOn(map);
   } else {
     alert("City not found. Try Omaha, Lincoln, Kearney, Grand Island, Norfolk, North Platte, or Scottsbluff.");
   }
