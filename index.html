@@ -285,10 +285,7 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
 
 document.getElementById("ratingFilter").addEventListener("change", drawTornadoes);
 
-document.getElementById("yearSlider").addEventListener("input", function() {
-  document.getElementById("yearValue").innerHTML = "Through " + this.value;
-  drawTornadoes();
-});
+document.getElementById("decadeFilter").addEventListener("change", drawTornadoes);
 
   const cities = [
   { name: "Omaha", coords: [41.2565, -95.9345] },
