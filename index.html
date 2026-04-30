@@ -11,7 +11,7 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, sandras-serif;
     }
 
     #map {
@@ -175,11 +175,11 @@ function tornadoPopup(feature, layer) {
   `);
 }
 
-function drawTornadoes() {
-  if (!tornadoData) return;
+function drawTornadoPoints() {
+  if (!tornadoPointsData) return;
 
-  if (tornadoPaths) {
-    map.removeLayer(tornadoPaths);
+  if (tornadoPoints) {
+    map.removeLayer(tornadoPoints);
   }
 
   const minRating = Number(document.getElementById("ratingFilter").value);
@@ -187,16 +187,42 @@ function drawTornadoes() {
 
   const filtered = {
     type: "FeatureCollection",
-    features: tornadoData.features.filter(f => {
+    features: tornadoPointsData.features.filter(f => {
       const mag = Number(f.properties.mag);
       const yr = Number(f.properties.yr);
-     const decadeMatch =
-  decadeValue === "all" ||
-  (yr >= Number(decadeValue) && yr <= Number(decadeValue) + 9);
 
-return mag >= minRating && decadeMatch;
+      const decadeMatch =
+        decadeValue === "all" ||
+        (yr >= Number(decadeValue) && yr <= Number(decadeValue) + 9);
+
+      return mag >= minRating && decadeMatch;
     })
   };
+
+  tornadoPoints = L.geoJSON(filtered, {
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng, {
+        radius: 4,
+        color: "black",
+        fillColor: "yellow",
+        fillOpacity: 0.8,
+        weight: 1
+      });
+    },
+    onEachFeature: function(feature, layer) {
+      const p = feature.properties;
+
+      layer.bindPopup(`
+        <b>Tornado Record (Incomplete)</b><br><br>
+        <b>Date:</b> ${p.mo}/${p.dy}/${p.yr}<br>
+        <b>Rating:</b> EF-${p.mag}<br><br>
+        <b>Injuries:</b> ${p.inj}<br>
+        <b>Fatalities:</b> ${p.fat}<br><br>
+        <i>No path data available</i>
+      `);
+    }
+  }).addTo(map);
+}
 
   tornadoPaths = L.geoJSON(filtered, {
     style: tornadoStyle,
