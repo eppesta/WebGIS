@@ -220,10 +220,12 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
     layerControl.addOverlay(tornadoPoints, "Touchdown Points");
   });
 
-  fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
+  let countyLayer;
+
+fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
   .then(response => response.json())
   .then(data => {
-    const countyLayer = L.geoJSON(data, {
+    countyLayer = L.geoJSON(data, {
       style: {
         color: "#333",
         weight: 1,
