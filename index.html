@@ -177,8 +177,10 @@ function tornadoPopup(feature, layer) {
 }
 
 function drawTornadoes() {
-  if (!tornadoData) return;
-  if (tornadoPaths) map.removeLayer(tornadoPaths);
+  if (tornadoPaths) {
+  map.removeLayer(tornadoPaths);
+  layerControl.removeLayer(tornadoPaths);
+}
 
   const minRating = Number(document.getElementById("ratingFilter").value);
 
