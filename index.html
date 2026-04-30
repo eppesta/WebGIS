@@ -231,6 +231,10 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
     layer.bindTooltip(`EF-${p.mag} | ${p.yr}`, { sticky: true }).openTooltip();
   });
 }
+            }).addTo(map);
+
+    layerControl.addOverlay(tornadoPoints, "Touchdown Points");
+  });
 
   let countyLayer;
 
