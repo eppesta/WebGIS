@@ -189,7 +189,11 @@ function drawTornadoes() {
     features: tornadoData.features.filter(f => {
       const mag = Number(f.properties.mag);
       const yr = Number(f.properties.yr);
-      return mag >= minRating && yr <= maxYear;
+     const decadeMatch =
+  decadeValue === "all" ||
+  (yr >= Number(decadeValue) && yr <= Number(decadeValue) + 9);
+
+return mag >= minRating && decadeMatch;
     })
   };
 
