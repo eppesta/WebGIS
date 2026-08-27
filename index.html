@@ -290,6 +290,64 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
     layerControl.addOverlay(tornadoPoints, "Touchdown Points");
   });
 
+  function tornadoDensityStyle(feature) {
+  const name = feature.properties.NAME;
+
+  const density = {
+    "Hall": 139.2,
+    "Hamilton": 123.2,
+    "Thayer": 114.8,
+    "Adams": 99.5,
+    "Buffalo": 90.9,
+    "Clay": 90.8,
+    "Scottsbluff": 90.7,
+    "Cass": 89.4,
+    "York": 85.1,
+    "Polk": 82.0,
+    "Nuckolls": 80.0,
+    "Howard": 78.9,
+    "Madison": 76.8,
+    "Stanton": 74.4,
+    "Fillmore": 72.8
+  };
+
+  const value = density[name] || 0;
+
+  if (value >= 100) {
+    return {
+      color: "#7f0000",
+      weight: 1,
+      fillColor: "#7f0000",
+      fillOpacity: 0.65
+    };
+  }
+
+  if (value >= 80) {
+    return {
+      color: "#d7301f",
+      weight: 1,
+      fillColor: "#d7301f",
+      fillOpacity: 0.55
+    };
+  }
+
+  if (value >= 70) {
+    return {
+      color: "#fc8d59",
+      weight: 1,
+      fillColor: "#fc8d59",
+      fillOpacity: 0.50
+    };
+  }
+
+  return {
+    color: "#999",
+    weight: 1,
+    fillColor: "#eee",
+    fillOpacity: 0.15
+  };
+}
+
 fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
   .then(response => response.json())
   .then(data => {
