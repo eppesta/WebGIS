@@ -152,9 +152,21 @@
 
 const map = L.map('map').setView([41.5, -99.7], 7);
 
-const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Tiles &copy; Esri'
-}).addTo(map);
+// Default basemap
+const basemap = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles &copy; Esri'
+  }
+).addTo(map);
+
+// Optional light gray basemap
+const lightBasemap = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles &copy; Esri'
+  }
+);
 
 let tornadoData;
 let tornadoPaths;
@@ -163,7 +175,10 @@ let tornadoPoints;
 let countyLayer;
 
 const layerControl = L.control.layers(
-  { "Esri Topographic": basemap },
+  {
+    "Esri Topographic": basemap,
+    "Light Gray": lightBasemap
+  },
   {}
 ).addTo(map);
 
