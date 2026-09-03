@@ -351,14 +351,17 @@ fetch("nebraska-tornado-webgis/data/ne_tornadoes_points.geojson")
 fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
   .then(response => response.json())
   .then(data => {
+
+    // Normal Nebraska county boundary layer
     countyLayer = L.geoJSON(data, {
       style: {
         color: "#888",
         weight: 1,
         fillOpacity: 0
       },
+
       onEachFeature: function(feature, layer) {
-        layer.bindPopup(`<b>${feature.properties.NAME}</b>`);
+        layer.bindPopup(`<b>${feature.properties.NAME} County</b>`);
 
         layer.on("mouseover", function() {
           layer.setStyle({
@@ -375,7 +378,72 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
     }).addTo(map);
 
     countyLayer.bringToBack();
-    layerControl.addOverlay(countyLayer, "Nebraska Counties");
+
+    layerControl.addOverlay(
+      countyLayer,
+      "Nebraska Counties"
+    );
+
+
+    // Historical tornado density layer
+    const tornadoDensityLayer = L.geoJSON(data, {
+      style: tornadoDensityStyle,
+
+      onEachFeature: function(feature, layer) {
+
+        const density = {
+          "Hall": 139.2,
+          "Hamilton": 123.2,
+          "Thayer": 114.8,
+          "Adams": 99.5,
+          "Buffalo": 90.9,
+          "Clay": 90.8,
+          "Scottsbluff": 90.7,
+          "Cass": 89.4,
+          "York": 85.1,
+          "Polk": 82.0,
+          "Nuckolls": 80.0,
+          "Howard": 78.9,
+          "Madison": 76.8,
+          "Stanton": 74.4,
+          "Fillmore": 72.8
+        };
+
+        const value = density[feature.properties.NAME] || 0;
+
+        layer.bindPopup(`
+          <b>${feature.properties.NAME} County</b><br><br>
+
+          <b>Historical Tornado Density:</b><br>
+          ${
+            value > 0
+              ? value + " tornadoes per 1,000 sq. mi."
+              : "Below highlighted threshold"
+          }
+
+          <br><br>
+          <i>Historical density, 1950–2023</i>
+        `);
+
+        layer.on("mouseover", function() {
+          layer.setStyle({
+            weight: 2,
+            color: "#000"
+          });
+
+          layer.bringToFront();
+        });
+
+        layer.on("mouseout", function() {
+          tornadoDensityLayer.resetStyle(layer);
+        });
+      }
+    });
+
+    layerControl.addOverlay(
+      tornadoDensityLayer,
+      "Historical Tornado Density"
+    );
   });
 
 document.getElementById("ratingFilter").addEventListener("change", function() {
