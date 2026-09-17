@@ -173,6 +173,7 @@ let tornadoPaths;
 let tornadoPointsData;
 let tornadoPoints;
 let countyLayer;
+let tornadoDensityLayer;
 
 const layerControl = L.control.layers(
   {
@@ -401,7 +402,7 @@ fetch("nebraska-tornado-webgis/data/ne_counties.geojson")
 
 
     // Historical tornado density layer
-    const tornadoDensityLayer = L.geoJSON(data, {
+    tornadoDensityLayer = L.geoJSON(data, {
       style: tornadoDensityStyle,
 
       onEachFeature: function(feature, layer) {
@@ -536,10 +537,22 @@ legend.onAdd = function() {
     <span style="color:#e31a1c; font-size:22px;">■</span> F/EF3<br>
     <span style="color:#800026; font-size:22px;">■</span> F/EF4<br>
     <span style="color:#4b0082; font-size:22px;">■</span> F/EF5
+  `;
 
-    <br>
+  return div;
+};
 
-    <b style="margin-top:10px;">Historical Tornado Density</b>
+legend.addTo(map);
+
+
+// Historical tornado density legend
+const densityLegend = L.control({ position: "bottomright" });
+
+densityLegend.onAdd = function() {
+  const div = L.DomUtil.create("div", "legend");
+
+  div.innerHTML = `
+    <b>Historical Tornado Density</b>
 
     <span style="color:#7f0000; font-size:22px;">■</span> 100+ Very High<br>
     <span style="color:#d7301f; font-size:22px;">■</span> 80–99.9 High<br>
@@ -547,13 +560,30 @@ legend.onAdd = function() {
     <span style="color:#eeeeee; font-size:22px;">■</span> Below 70
 
     <br>
-    <small>Tornadoes per 1,000 sq. mi.<br>1950–2023</small>
+    <small>
+      Tornadoes per 1,000 sq. mi.<br>
+      1950–2023
+    </small>
   `;
 
   return div;
 };
 
-legend.addTo(map);
+
+// Show density legend when density layer is turned on
+map.on("overlayadd", function(event) {
+  if (event.layer === tornadoDensityLayer) {
+    densityLegend.addTo(map);
+  }
+});
+
+
+// Hide density legend when density layer is turned off
+map.on("overlayremove", function(event) {
+  if (event.layer === tornadoDensityLayer) {
+    map.removeControl(densityLegend);
+  }
+});
 </script>
 
 </body>
